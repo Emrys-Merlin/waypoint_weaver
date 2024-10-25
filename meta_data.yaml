@@ -1,0 +1,44 @@
+coordinates:
+  # Sexshop
+  - solution: 23341
+    coordinate: "52.49278232538021, 13.3821449269073"
+    name: Schneewittchen
+  # Kuchenkultur
+  - solution: 33885
+    coordinate: "52.492830925278916, 13.382977953891166"
+    name: Russel
+  # Galander
+  - solution: 17446
+    coordinate: "52.49201148456069, 13.383314498071314"
+    name: Belle
+  # Flor di Latte
+  - solution: 73491
+    coordinate: "52.49024509279957, 13.383064582727151"
+    name: Stitch
+  # Ampler Bikes
+  - solution: 42121
+    coordinate: "52.49206221936423, 13.376278726907316"
+    name: Remy
+  # Bushaltestelle
+  - solution: 91523
+    coordinate: "52.48936885415385, 13.377397317096003"
+    name: Alice
+
+start_coord: "52.4927985225051, 13.37875885386036"
+
+welcome_text: |
+  Willkommen beim Scavenger Hunt Game! 🎉
+  Deine Aufgabe ist es, die 6 Orte in der Umgebung zu finden und die Lösungen zu scannen.
+  Viel Spaß! 🚀
+
+random_coords:
+  lat:
+    min: 52.48680325805024
+    max: 52.498326422108214
+  lon:
+    min: 13.372276871074952
+    max: 13.380066006044846
+  range:
+    min: 10_000
+    max: 100_000
+  count: 100
