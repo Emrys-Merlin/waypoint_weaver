@@ -57,10 +57,18 @@ def generate_coordinates(
     df = df[["solution", "coordinate"]]
 
     coordinates = data["coordinates"]
+    qr_code_table_list = []
     for current, previous in zip(coordinates, [coordinates[-1]] + coordinates[:-1]):
         group_df = df.copy()
         name = current["name"]
-        start_coordinate = current["coordinate"]
+        start_coordinate = previous["coordinate"]
+        qr_code_table_list.append(
+            {
+                "name": name,
+                "location": previous["location"],
+                "coordinate": start_coordinate,
+            }
+        )
 
         group_df.loc[group_df["solution"] == previous["solution"], "coordinate"] = data[
             "start_coord"
@@ -75,6 +83,10 @@ def generate_coordinates(
             f.write(f"__Start-Koordinate__: {start_coordinate}\n\n")
             f.write("## Koordinatentabelle\n\n")
             group_df.to_markdown(f, index=False)
+
+    pd.DataFrame.from_dict(qr_code_table_list).to_markdown(
+        output, index=False, tablefmt="github"
+    )
 
 
 if __name__ == "__main__":
