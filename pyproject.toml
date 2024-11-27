@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "waypoint_weaver"
+dynamic = ["version"]
+description = "Your project description"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Tim Adler", email = "tim+github@emrys-merlin.de" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = ["pandas", "pyyaml", "tabulate", "typer", "pydantic>=2.0"]
+
+[project.urls]
+Documentation = "https://github.com/unknown/project_name#readme"
+Issues = "https://github.com/unknown/project_name/issues"
+Source = "https://github.com/unknown/project_name"
+
+[project.scripts]
+waypoint-weaver = "waypoint_weaver.cli:main"
+
+[tool.hatch.version]
+path = "src/waypoint_weaver/__init__.py"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "B", # flake8-bugbear
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["src/waypoint_weaver"]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+    "pytest-cov",
+    "mypy",
+    "ipdb",
+    "pandas-stubs",
+    "types-PyYAML",
+    "pre-commit",
+]
