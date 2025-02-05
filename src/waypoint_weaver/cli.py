@@ -1,37 +1,73 @@
 from pathlib import Path
+from typing import Annotated
 
-from typer import Typer
+from typer import Option, Typer, confirm, echo
 
-from .meta_data import MetaData
+from . import EXAMPLE_CONFIG
+from .config import Config
+from .typing import Format
 
 main = Typer()
 
 
 @main.command()
-def generate_coordinates(
-    meta_data: Path = Path("meta_data.yaml"),
-    output_dir: Path = Path("./output"),
+def get_config(
+    output: Annotated[
+        Path, Option("-o", "--output", help="Destination for the config file")
+    ] = Path("./config.yaml"),
+    skip_confirmation: Annotated[
+        bool, Option("-y", "--yes", help="Skip confirmation")
+    ] = False,
+) -> None:
+    """Get an example config file."""
+    if not skip_confirmation and output.exists():
+        message = f"Config file '{output}' already exists. Overwrite?"
+        if not confirm(message):
+            exit(1)
+
+    echo(f"Storing example config file at {output}")
+
+    with open(EXAMPLE_CONFIG) as f:
+        text = f.read()
+
+    with open(output, "w") as f:
+        f.write(text)
+
+
+@main.command()
+def create(
+    config_file: Annotated[
+        Path, Option("-c", "--config", help="Path to config file")
+    ] = Path("./config.yaml"),
+    output: Annotated[
+        Path,
+        Option(
+            "-o",
+            "--output",
+            help="Output file if --format=xls. Otherwise, output directory",
+        ),
+    ] = Path("./waypoints.xlsx"),
+    format: Annotated[
+        Format, Option("-f", "--format", help="Output format (md, xls, or csv)")
+    ] = Format.xls,
+    skip_confirmation: Annotated[
+        bool, Option("-y", "--yes", help="Skip confirmation")
+    ] = False,
 ):
-    output_dir.mkdir(parents=True, exist_ok=True)
-    data = MetaData.from_yaml_file(meta_data)
+    """Create one or more waypoint files from a config file."""
+    if not config_file.exists():
+        echo(f"Config file '{config_file}' does not exist.", err=True)
+        exit(1)
 
-    for i, team_table in enumerate(data.team_tables()):
-        team_output = output_dir / f"{i:02d}_{team_table.name}.md"
+    if not skip_confirmation and output.exists():
+        message = f"Output file '{output}' already exists. Overwrite?"
+        if not confirm(message):
+            exit(1)
 
-        with open(team_output, "w") as f:
-            f.write(f"# Team {team_table.name}\n\n")
-            f.write(data.welcome_text or "")
-            f.write("\n\n")
-            f.write(f"__Start-Koordinate__: {team_table.start_coordinate}\n\n")
-            f.write("## Koordinatentabelle\n\n")
-            team_table.table.to_markdown(f, index=False)
+    config = Config.from_yaml_file(config_file)
 
-    overview_output = output_dir / "overview.md"
-    data.get_overview_table().to_markdown(
-        overview_output,
-        index=False,
-        tablefmt="github",
-    )
+    config.save_tables(output=output, format=format)
+    echo(f"Stored tables to {output}")
 
 
 if __name__ == "__main__":

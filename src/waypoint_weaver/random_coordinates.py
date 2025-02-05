@@ -27,6 +27,7 @@ class RandomCoordinates(BaseModel):
     lon: Range[float]
     lat: Range[float]
 
+    # TODO add seed option
     def generate_dataframe(
         self, invalid_solutions: set[int] | None = None
     ) -> pd.DataFrame:

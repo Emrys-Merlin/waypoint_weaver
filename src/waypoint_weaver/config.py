@@ -6,13 +6,14 @@ from pydantic import BaseModel, ConfigDict
 from yaml import safe_dump, safe_load
 
 from .random_coordinates import RandomCoordinates
+from .storage import store_tables
+from .typing import Format
 
 
 class Coordinate(BaseModel):
     solution: int
     coordinate: str
     name: str
-    location: str | None = None
 
 
 class TeamTable(BaseModel):
@@ -23,38 +24,37 @@ class TeamTable(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
-class MetaData(BaseModel):
+class Config(BaseModel):
     coordinates: list[Coordinate]
     random_coords: RandomCoordinates
-    start_coord: str
-    welcome_text: str | None = None
+    destination_coord: str
 
     @property
     def next_coordinates(self) -> list[Coordinate]:
         return self.coordinates[1:] + [self.coordinates[0]]
 
     @classmethod
-    def from_yaml(cls, yaml_str: str) -> "MetaData":
-        """Create a MetaData instance from a YAML string.
+    def from_yaml(cls, yaml_str: str) -> "Config":
+        """Create a Config instance from a YAML string.
 
         Args:
             yaml_str: YAML formatted string
 
         Returns:
-            MetaData: Instance created from the YAML data
+            Instance created from the YAML data
         """
         yaml_data = safe_load(yaml_str)
         return cls(**yaml_data)
 
     @classmethod
-    def from_yaml_file(cls, yaml_file: str | Path) -> "MetaData":
-        """Create a MetaData instance from a YAML file.
+    def from_yaml_file(cls, yaml_file: str | Path) -> "Config":
+        """Create a Config instance from a YAML file.
 
         Args:
             yaml_file: Path to the YAML file
 
         Returns:
-            MetaData: Instance created from the YAML file
+            Instance created from the YAML file
         """
         if isinstance(yaml_file, str):
             yaml_file = Path(yaml_file)
@@ -66,7 +66,7 @@ class MetaData(BaseModel):
         """Convert the model to a YAML string.
 
         Returns:
-            str: The model data as a YAML formatted string
+            The model data as a YAML formatted string
         """
         return safe_dump(self.model_dump())
 
@@ -106,11 +106,9 @@ class MetaData(BaseModel):
         return pd.DataFrame(
             {
                 "current_name": [coord.name for coord in self.coordinates],
-                "current_location": [coord.location for coord in self.coordinates],
                 "current_coordinate": [coord.coordinate for coord in self.coordinates],
                 "current_solution": [coord.solution for coord in self.coordinates],
                 "next_name": [coord.name for coord in next_coords],
-                "next_location": [coord.location for coord in next_coords],
                 "next_coordinate": [coord.coordinate for coord in next_coords],
             }
         )
@@ -133,14 +131,51 @@ class MetaData(BaseModel):
         )
 
     def team_tables(self) -> Iterator[TeamTable]:
+        """Iterate over team-specific solution tables.
+
+        Yields:
+            The team tables with specific start coordinate and the common
+            destination coordinate placed on the correct solution
+        """
         table = self.raw_player_table()
         for coord in self.coordinates:
             table_copy = table.copy()
             table_copy.loc[table_copy["solution"] == coord.solution, "coordinate"] = (
-                self.start_coord
+                self.destination_coord
             )
             yield TeamTable(
                 name=coord.name,
                 start_coordinate=coord.coordinate,
                 table=table_copy,
             )
+
+    def save_tables(self, format: Format, output: Path) -> None:
+        """Save the tables to the output directory.
+
+        Args:
+            format: The output format
+            output: The output directory
+        """
+        tables = {
+            "route": self.get_overview_table(),
+        }
+        starting_locations = []
+
+        for i, team_table in enumerate(self.team_tables(), 1):
+            name = f"team_{i:02d}"
+            tables[name] = team_table.table
+            starting_locations.append(
+                {
+                    "team": name,
+                    "name": team_table.name,
+                    "start_coordinate": team_table.start_coordinate,
+                }
+            )
+
+        tables["starting_locations"] = pd.DataFrame(starting_locations)
+
+        store_tables(
+            format=format,
+            output=output,
+            tables=tables,
+        )

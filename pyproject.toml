@@ -16,7 +16,14 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
 ]
-dependencies = ["pandas", "pyyaml", "tabulate", "typer", "pydantic>=2.0"]
+dependencies = [
+    "pandas",
+    "pyyaml",
+    "tabulate",
+    "typer",
+    "pydantic>=2.0",
+    "openpyxl>=3.1.5",
+]
 
 [project.urls]
 Documentation = "https://github.com/unknown/project_name#readme"

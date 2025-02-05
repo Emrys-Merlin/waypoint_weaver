@@ -1,0 +1,37 @@
+# Destination where all teams should end up
+destination_coord: "52.4927985225051, 13.37875885386036"
+
+# Coordinates of the waypoints
+# Each coordinate consists of 3 parts:
+# - name: A note to help the organizer identify the waypoint
+# - coordinate: The latitude and longitude of the current waypoint
+# - solution: The solution to the riddle at the current waypoint
+#   Caution! The solution will point to the next waypoint in the list (not the current coordinate). This is a bit confusing.
+# The order of the waypoints is assumed to be the order in which they will be visited. The last waypoint will wrap around to the first waypoint.
+# You cannot have more teams than waypoints.
+coordinates:
+  - name: By the swing
+    coordinate: "52.49278232538021, 13.3821449269073"
+    solution: 23341
+  - name: In front of the bike store
+    coordinate: "52.492830925278916, 13.382977953891166"
+    solution: 33885
+  - name: At the pontoon
+    coordinate: "52.49201148456069, 13.383314498071314"
+    solution: 17446
+
+# Random coordinates are drawn uniformly at random from the given ranges.
+# The number of random coordinates is determined by the count.
+# The coordinates are used to create decoy waypoints.
+# Solution numbers are not assigned to random coordinates.
+random_coords:
+  lat:
+    min: 52.48680325805024
+    max: 52.498326422108214
+  lon:
+    min: 13.372276871074952
+    max: 13.380066006044846
+  range:
+    min: 10_000
+    max: 100_000
+  count: 100
