@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "waypoint_weaver"
 dynamic = ["version"]
-description = "Your project description"
+description = "A tool to generate a table of waypoints for a treasure hunt."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -37,7 +37,7 @@ waypoint-weaver = "waypoint_weaver.cli:main"
 path = "src/waypoint_weaver/__init__.py"
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py312"
 line-length = 88
 
 [tool.ruff.lint]
