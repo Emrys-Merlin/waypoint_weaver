@@ -9,21 +9,29 @@ from waypoint_weaver.config import Config
 
 
 @pytest.fixture
-def test_data() -> dict[str, Any]:
+def n_stations() -> int:
+    return 5
+
+
+@pytest.fixture
+def test_data(
+    n_stations: int,
+) -> dict[str, Any]:
     return {
         "coordinates": [
             {
-                "solution": 1,
-                "coordinate": "1,1",
-                "name": "test",
-            },
+                "solution": i,
+                "coordinate": f"1,{i}",
+                "name": f"test_{i:02d}",
+            }
+            for i in range(n_stations)
         ],
         "destination_coord": "1., 1.",
         "random_coords": {
             "range": {"min": 1, "max": 20},
             "lon": {"min": 1.0, "max": 1.0},
             "lat": {"min": 1.0, "max": 1.0},
-            "count": 1,
+            "count": 15,
         },
     }
 

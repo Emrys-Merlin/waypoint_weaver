@@ -1,5 +1,6 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 import pandas as pd
 import pytest
@@ -45,3 +46,13 @@ def test_store_tables(
             assert (output / "table2.csv").exists()
         else:
             raise ValueError(f"Unknown format: {format}")
+
+
+@patch("waypoint_weaver.storage.STORAGE_DICT", {})
+def test_empty_storage_dict():
+    with pytest.raises(ValueError):
+        store_tables(
+            format=Format.xls,
+            output=Path("test.xlsx"),
+            tables={},
+        )

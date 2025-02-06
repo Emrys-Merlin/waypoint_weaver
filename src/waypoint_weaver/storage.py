@@ -35,7 +35,7 @@ def _store_csv(
         table.to_csv(output / f"{name}.csv", index=False)
 
 
-class _Storage(Protocol):
+class _Storage(Protocol):  # pragma: no cover
     def __call__(self, output: Path, tables: dict[str, pd.DataFrame]) -> None: ...
 
 
