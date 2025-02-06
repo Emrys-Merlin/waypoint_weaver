@@ -4,7 +4,7 @@
 | 3.12 | 3.13 |
 |------|------|
 |![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FEmrys-Merlin%2Fec2e4e339a048ca0f0b996517d282a4a%2Fraw%2Fwaypoint_weaver_3.12-junit-tests.json)|![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FEmrys-Merlin%2Fec2e4e339a048ca0f0b996517d282a4a%2Fraw%2Fwaypoint_weaver_3.13-junit-tests.json)|
-|![Endpoint Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Emrys-Merlin/ec2e4e339a048ca0f0b996517d282a4a/raw/7bb08f823be14242b40466aed324de8bff518364/waypoint_weaver_3.12-cobertura-coverage.json)|![Endpoint Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Emrys-Merlin/ec2e4e339a048ca0f0b996517d282a4a/raw/7bb08f823be14242b40466aed324de8bff518364/waypoint_weaver_3.13-cobertura-coverage.json)|
+|![Endpoint Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Emrys-Merlin/ec2e4e339a048ca0f0b996517d282a4a/raw/waypoint_weaver_3.12-cobertura-coverage.json)|![Endpoint Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Emrys-Merlin/ec2e4e339a048ca0f0b996517d282a4a/raw/waypoint_weaver_3.12-cobertura-coverage.json)|
 
 # Waypoint Weaver
 
