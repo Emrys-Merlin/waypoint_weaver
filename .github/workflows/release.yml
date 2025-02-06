@@ -1,0 +1,52 @@
+name: Release a new version
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+    paths:
+      - "src/waypoint_weaver/__init__.py"
+
+
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
+    if: github.event.pull_request.merged == true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version
+        id: extract_version
+        run: |
+          echo "version=$(grep -oP '__version__ = "\K[^"]+' src/waypoint_weaver/__init__.py)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build and publish
+        run: |
+          make build
+          make publish
+        shell: bash
+
+      - name: Create release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ steps.extract_version.outputs.version }}
+          release_name: v${{ steps.extract_version.outputs.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
